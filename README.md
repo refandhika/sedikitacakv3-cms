@@ -1,5 +1,21 @@
-## Next.js App Router Course - Starter
+# Sedikit Acak V3 - CMS
 
-This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
+A Modern CMS made with Next.js using [SedikitAcakV3-API](https://github.com/refandhika/sedikitacakv3-api) for backend.
 
-For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+This project use starter template from the [Next.js Dashboard App Course](https://nextjs.org/learn/dashboard-app/getting-started) as reference.
+
+**Project Still On Going!**
+
+---
+
+To Do:
+- Create Login Page and handle authentication and authorization
+- Create necessary sidemenu for available endpoints
+- Create table component to show any table data
+- Create Users add and edit form
+- Create Posts add and edit form
+- Create Projects add and edit form
+- Create Techs add and edit form
+- Create Hobbies add and edit form
+- Create Settings add and edit form
+- Create Roles add and edit form
