@@ -1,3 +1,5 @@
+"use client"
+
 import { lusitana } from '@/app/ui/fonts';
 import {
   AtSymbolIcon,
@@ -6,10 +8,45 @@ import {
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
+import { useRouter } from 'next/navigation';
+import { FormEvent } from 'react';
 
 export default function LoginForm() {
+  const router = useRouter()
+
+  async function handleLogin(event:FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get('email')
+    const password = formData.get('password')
+
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/login`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "email": email,
+                "password": password
+            })
+        })
+
+        if (response.ok) {
+            router.push('/dashboard')
+        } else {
+            throw new Error(`Login Failed: ${response.statusText}`)
+        }
+
+        const { token, userId } = await response.json()
+        document.cookie = `cmsToken=${token}; path=/;` // secure; samesite=strict;`
+
+    } catch (err) {
+        alert(`Login failed: ${err}`)
+    }
+  }
+
   return (
-    <form className="space-y-3">
+    <form className="space-y-3" onSubmit={handleLogin}>
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
           Please log in to continue.
