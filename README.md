@@ -9,7 +9,6 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 ---
 
 To Do:
-- Create Login Page and handle authentication and authorization
 - Create necessary sidemenu for available endpoints
 - Create table component to show any table data
 - Create Users add and edit form

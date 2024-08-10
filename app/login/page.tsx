@@ -1,7 +1,22 @@
+"use client"
+
 import AcmeLogo from '@/app/ui/acme-logo';
 import LoginForm from '@/app/ui/login-form';
+import { useEffect } from 'react';
+import { getCookie } from '@/app/lib/cookies';
 
 export default function LoginPage() {
+  useEffect(() => {
+    const cms_token = getCookie('cmsToken');
+    const current_id = getCookie('currentId');
+
+    console.log
+
+    if(cms_token && current_id) {
+        window.location.href = '/dashboard';
+    }
+  });
+    
   return (
     <main className="flex items-center justify-center md:h-screen">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">

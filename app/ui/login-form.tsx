@@ -10,6 +10,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
 import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
+import { setCookie } from '../lib/cookies';
 
 export default function LoginForm() {
   const router = useRouter()
@@ -37,9 +38,10 @@ export default function LoginForm() {
             throw new Error(`Login Failed: ${response.statusText}`)
         }
 
-        const { token, userId } = await response.json()
-        document.cookie = `cmsToken=${token}; path=/;` // secure; samesite=strict;`
+        const { token, user_id } = await response.json()
 
+        setCookie("cmsToken", token, 1)
+        setCookie("currentId", user_id, 1)
     } catch (err) {
         alert(`Login failed: ${err}`)
     }

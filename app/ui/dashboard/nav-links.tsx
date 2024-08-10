@@ -4,6 +4,13 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  BriefcaseIcon,
+  ComputerDesktopIcon,
+  CpuChipIcon,
+  FilmIcon,
+  IdentificationIcon,
+  MusicalNoteIcon,
+  Cog8ToothIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
@@ -12,13 +19,66 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  {
+    name: 'Home',
+    href: '/dashboard',
+    icon: HomeIcon
+  },
   {
     name: 'Invoices',
     href: '/dashboard/invoices',
     icon: DocumentDuplicateIcon,
   },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+  {
+    name: 'Customers',
+    href: '/dashboard/customers',
+    icon: UserGroupIcon
+  },
+  {
+    name: 'Posts',
+    href: '/dashboard/posts',
+    icon: DocumentDuplicateIcon
+  },
+  {
+    name: 'Post Categories',
+    href: '/dashboard/post-categories',
+    icon: BriefcaseIcon
+  },
+  {
+    name: 'Projects',
+    href: '/dashboard/projects',
+    icon: ComputerDesktopIcon
+  },
+  {
+    name: 'Techs',
+    href: '/dashboard/techs',
+    icon: CpuChipIcon
+  },
+  {
+    name: 'Hobby',
+    href: '/dashboard/hobbies',
+    icon: MusicalNoteIcon
+  },
+  {
+    name: 'Gallery',
+    href: '/dashboard/gallery',
+    icon: FilmIcon
+  },
+  {
+    name: 'User',
+    href: '/dashboard/users',
+    icon: UserGroupIcon
+  },
+  {
+    name: 'Roles',
+    href: '/dashboard/roles',
+    icon: IdentificationIcon
+  },
+  {
+    name: 'Settings',
+    href: '/dashboard/settings',
+    icon: Cog8ToothIcon
+  },
 ];
 
 export default function NavLinks() {
