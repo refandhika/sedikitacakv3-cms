@@ -1,4 +1,3 @@
-import { sql } from '@vercel/postgres';
 import {
   CustomerField,
   CustomersTableType,
@@ -8,9 +7,11 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
-import { getCookie } from './cookies';
+import { cookies } from 'next/headers';
 
-const currToken = getCookie("cmsToken");
+const cookieStore = cookies();
+const tokenCookie = cookieStore.get("cmsToken");
+const currToken = tokenCookie?.value;
 
 export async function fetchRevenue() {
   // try {
@@ -219,10 +220,9 @@ export async function fetchFilteredCustomers(query: string) {
   // }
 }
 
-
-export async function fetchPosts(page: number = 1, limit: number = 20, cat: string = '') {
+export async function fetchPosts(search: string = '', page: number = 1, limit: number = 20, cat: string = '') {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/posts?page=${page}&limit=${limit}&cat=${cat}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/posts?page=${page}&limit=${limit}&cat=${cat}&search=${search}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -239,5 +239,49 @@ export async function fetchPosts(page: number = 1, limit: number = 20, cat: stri
   } catch (error) {
     console.error('Error fetching posts data from API:', error);
     throw new Error('Failed to fetch posts data.');
+  }
+}
+
+export async function fetchPostByID(slug: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/post/${slug}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching post data from API:', error);
+    throw new Error('Failed to fetch post data.');
+  }
+}
+
+export async function fetchPostCategories() {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post-categories`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post categories data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching post categories data from API:', error);
+    throw new Error('Failed to fetch post categories data.');
   }
 }

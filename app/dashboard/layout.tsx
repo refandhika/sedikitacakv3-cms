@@ -5,11 +5,10 @@ import { useEffect } from "react";
 import { getCookie } from "../lib/cookies";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+
     useEffect(() => {
         const cms_token = getCookie('cmsToken');
         const current_id = getCookie('currentId');
-
-        console.log
 
         if(!cms_token || !current_id) {
             window.location.href = '/login';
