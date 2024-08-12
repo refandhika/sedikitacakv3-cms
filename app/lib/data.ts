@@ -263,25 +263,3 @@ export async function fetchPostByID(slug: string) {
     throw new Error('Failed to fetch post data.');
   }
 }
-
-export async function fetchPostCategories() {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post-categories`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${currToken}`
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch post categories data: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching post categories data from API:', error);
-    throw new Error('Failed to fetch post categories data.');
-  }
-}
