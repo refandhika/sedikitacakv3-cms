@@ -8,8 +8,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { useEffect, useState } from 'react';
-import { getCookie } from '@/app/lib/cookies';
 import TipTap from '../tiptap';
+import { fetchPostCategories, fetchCurrentUser } from '@/app/lib/fetch';
 
 export default function CreateForm() {
   const [title, setTitle] = useState('');
@@ -30,64 +30,11 @@ export default function CreateForm() {
       .replace(/-+/g, '-');;
   }
 
-  const fetchPostCategories = async () => {
-    setLoading(true);
-    const currToken = getCookie('cmsToken');
-    
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post-categories`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currToken}`
-        },
-      });
-
-      if (!response.ok) {
-        console.error(`Failed to fetch post categories data: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      //console.log(data);
-      return data;
-    } catch (error) {
-      console.error('Error fetching post categories data from API:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const fetchCurrentUser = async () => {
-    setLoading(true);
-    const currToken = getCookie('cmsToken');
-    const currUser = getCookie('currentId');
-    
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/user/${currUser}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currToken}`
-        },
-      });
-
-      if (!response.ok) {
-        console.error(`Failed to fetch post categories data: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error('Error fetching post categories data from API:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    setLoading(true);
     setCategories(fetchPostCategories());
     setUser(fetchCurrentUser());
+    setLoading(false);
   }, []);
 
   return (
@@ -186,7 +133,7 @@ export default function CreateForm() {
         </div>
 
         {/* Post Content */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="content" className="mb-2 block text-sm font-medium">
             Content
           </label>
@@ -195,7 +142,7 @@ export default function CreateForm() {
               <TipTap />
             </div>
           </div>
-        </div>
+        </div> */}
 
       </div>
       <div className="rounded-md bg-gray-50 p-4 md:p-6 w-full md:w-1/4">
