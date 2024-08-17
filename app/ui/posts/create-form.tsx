@@ -4,7 +4,8 @@ import Link from 'next/link';
 import {
   BookOpenIcon,
   DocumentTextIcon,
-  LinkIcon
+  LinkIcon,
+  TagIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { useEffect, useState } from 'react';
@@ -82,6 +83,25 @@ export default function CreateForm() {
           </div>
         </div>
 
+        {/* Post Subtitle */}
+        <div className="mb-4">
+          <label htmlFor="subtitle" className="mb-2 block text-sm font-medium">
+            Subtitle
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="subtitle"
+                name="subtitle"
+                type="text"
+                placeholder="Enter post subtitle"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+              <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+
         {/* Post Category */}
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
@@ -112,22 +132,39 @@ export default function CreateForm() {
             <BookOpenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
         </div>
-
-        {/* Post Subtitle */}
+        
+        {/* Post Content */}
         <div className="mb-4">
-          <label htmlFor="subtitle" className="mb-2 block text-sm font-medium">
-            Subtitle
+          <label htmlFor="content" className="mb-2 block text-sm font-medium">
+            Content
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <textarea
+                id="content"
+                name="content"
+                placeholder="Enter post content"
+                className="peer block w-full rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        {/* Post Tags */}
+        <div className="mb-4">
+          <label htmlFor="tags" className="mb-2 block text-sm font-medium">
+            Tags
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="subtitle"
-                name="subtitle"
+                id="tags"
+                name="tags"
                 type="text"
-                placeholder="Enter post subtitle"
+                placeholder="Enter post tags"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
-              <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
