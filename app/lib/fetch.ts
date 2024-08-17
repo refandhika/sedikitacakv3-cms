@@ -69,6 +69,29 @@ export async function fetchPostCategories() {
     }
 }
 
+export async function fetchRoles() {
+    const currToken = getCookie('cmsToken');
+    
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/roles`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currToken}`
+        },
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to fetch post categories data: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching post categories data from API:', error);
+    }
+}
+
 export async function fetchCurrentUser() {
     const currToken = getCookie('cmsToken');
     const currUser = getCookie('currentId');

@@ -23,7 +23,6 @@ const UsersTable = ({
     const fetchData = async () => {
       try {
         const fetchedData = await fetchUsers(query, currentPage, currentLimit);
-        console.log(fetchedData);
         setUsers(fetchedData);
       } catch (err) {
         console.error('Failed to fetch users:', err);
@@ -61,7 +60,7 @@ const UsersTable = ({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {user.role_id}
+                      {user.role.name}
                     </p>
                     <p>{formatDateToLocal(user.created_at)}</p>
                   </div>
@@ -108,7 +107,7 @@ const UsersTable = ({
                     {user.email}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {user.role_id}
+                    {user.role.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatDateToLocal(user.created_at)}

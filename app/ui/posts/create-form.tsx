@@ -9,7 +9,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { useEffect, useState } from 'react';
-import TipTap from '../tiptap';
 import { fetchPostCategories, fetchCurrentUser } from '@/app/lib/fetch';
 
 export default function CreateForm() {

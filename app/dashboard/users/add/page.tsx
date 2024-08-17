@@ -1,15 +1,15 @@
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import CreateForm from '@/app/ui/posts/create-form';
+import CreateForm from '@/app/ui/users/create-form';
  
 export default function Page() { 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Posts', href: '/dashboard/posts' },
+          { label: 'Users', href: '/dashboard/users' },
           {
-            label: 'Add Post',
-            href: '/dashboard/posts/add',
+            label: 'Add User',
+            href: '/dashboard/users/add',
             active: true,
           },
         ]}

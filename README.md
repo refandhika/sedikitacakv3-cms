@@ -9,12 +9,29 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 ---
 
 To Do:
-- Create necessary sidemenu for available endpoints
-- Create table component to show any table data
-- Create Users add and edit form
-- Create Posts add and edit form
-- Create Projects add and edit form
-- Create Techs add and edit form
-- Create Hobbies add and edit form
-- Create Settings add and edit form
-- Create Roles add and edit form
+- Connect Users:
+-- Edit Form
+-- Delete
+- Connect Posts:
+-- Create Form
+-- Edit Form
+-- Delete
+- Connect Projects:
+-- Create Form
+-- Edit Form
+-- Delete
+- Connect Techs:
+-- Create Form
+-- Edit form
+-- Delete
+- Connect Hobbies:
+-- Crete Form
+-- Edit Form
+-- Delete
+- Connect Settings:
+-- Create Form
+-- Edit Form
+-- Delete
+- Connect Roles:
+-- Create Form
+-- Edit form
