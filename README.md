@@ -10,28 +10,28 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 
 To Do:
 - Connect Users:
--- Edit Form
--- Delete
+    - Edit Form
+    - Delete
 - Connect Posts:
--- Create Form
--- Edit Form
--- Delete
+    - Create Form
+    - Edit Form
+    - Delete
 - Connect Projects:
--- Create Form
--- Edit Form
--- Delete
+    - Create Form
+    - Edit Form
+    - Delete
 - Connect Techs:
--- Create Form
--- Edit form
--- Delete
+    - Create Form
+    - Edit form
+    - Delete
 - Connect Hobbies:
--- Crete Form
--- Edit Form
--- Delete
+    - Crete Form
+    - Edit Form
+    - Delete
 - Connect Settings:
--- Create Form
--- Edit Form
--- Delete
+    - Create Form
+    - Edit Form
+    - Delete
 - Connect Roles:
--- Create Form
--- Edit form
+    - Create Form
+    - Edit form
