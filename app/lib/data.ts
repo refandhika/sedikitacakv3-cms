@@ -220,28 +220,6 @@ export async function fetchFilteredCustomers(query: string) {
   // }
 }
 
-export async function fetchPosts(search: string = '', page: number = 1, limit: number = 20, cat: string = '') {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/posts?page=${page}&limit=${limit}&cat=${cat}&search=${search}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${currToken}`
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch posts data: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching posts data from API:', error);
-    throw new Error('Failed to fetch posts data.');
-  }
-}
-
 export async function fetchPostByID(slug: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/post/${slug}`, {

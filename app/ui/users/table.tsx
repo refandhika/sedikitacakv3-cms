@@ -1,13 +1,13 @@
 "use client"
 
 import Image from 'next/image';
-import { UpdatePost, DeletePost } from '@/app/ui/posts/buttons';
-import PostStatus from '@/app/ui/posts/status';
+import { UpdateUser, DeleteUser } from '@/app/ui/users/buttons';
+import UserStatus from '@/app/ui/users/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchPosts } from '@/app/lib/fetch';
+import { fetchUsers } from '@/app/lib/fetch';
 import { useEffect, useState } from 'react';
 
-export default function PostsTable({
+const UsersTable = ({
   query,
   currentPage,
   currentLimit
@@ -15,21 +15,24 @@ export default function PostsTable({
   query: string;
   currentPage: number;
   currentLimit: number;
-}) {
-  const [posts, setPosts] = useState([]);
+}) => {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedData = await fetchPosts(query, currentPage, currentLimit);
-        setPosts(fetchedData);
+        const fetchedData = await fetchUsers(query, currentPage, currentLimit);
+        console.log(fetchedData);
+        setUsers(fetchedData);
       } catch (err) {
-        console.error('Failed to fetch posts:', err);
+        console.error('Failed to fetch users:', err);
       } finally {
         setLoading(false);
       }
     }
+
+    fetchData();
   }, [query, currentPage, currentLimit])
 
   if(loading){
@@ -41,37 +44,30 @@ export default function PostsTable({
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {posts?.map((post: any) => (
+            {users?.map((user: any) => (
               <div
-                key={post.id}
+                key={user.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <Image
-                        src={post.image_url}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${post.name}'s profile picture`}
-                      />
-                      <p>{post.name}</p>
+                      <p>{user.name}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{post.email}</p>
+                    <p className="text-sm text-gray-500">{user.email}</p>
                   </div>
-                  <PostStatus status={post.status} />
+                  <UserStatus status={user.status} />
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {formatCurrency(post.amount)}
+                      {user.role_id}
                     </p>
-                    <p>{formatDateToLocal(post.date)}</p>
+                    <p>{formatDateToLocal(user.created_at)}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdatePost id={post.id} />
-                    <DeletePost id={post.id} />
+                    <UpdateUser id={user.id} />
+                    <DeleteUser id={user.id} />
                   </div>
                 </div>
               </div>
@@ -81,59 +77,46 @@ export default function PostsTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  Name
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Email
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  Role
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  Create Date
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
+                  <span className="sr-only">Action</span>
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              {posts?.map((post: any) => (
+              {users?.map((user: any) => (
                 <tr
-                  key={post.id}
+                  key={user.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <Image
-                        src={post.image_url}
-                        className="rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${post.name}'s profile picture`}
-                      />
-                      <p>{post.name}</p>
+                      <p>{user.name}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {post.email}
+                    {user.email}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrency(post.amount)}
+                    {user.role_id}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(post.date)}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    <PostStatus status={post.status} />
+                    {formatDateToLocal(user.created_at)}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdatePost id={post.id} />
-                      <DeletePost id={post.id} />
+                      <UpdateUser id={user.id} />
+                      <DeleteUser id={user.id} />
                     </div>
                   </td>
                 </tr>
@@ -145,3 +128,5 @@ export default function PostsTable({
     </div>
   );
 }
+
+export default UsersTable;

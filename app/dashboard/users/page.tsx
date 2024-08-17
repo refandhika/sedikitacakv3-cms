@@ -1,5 +1,5 @@
-import PostsTable from "@/app/ui/posts/table";
-import { CreatePost } from "@/app/ui/posts/buttons";
+import UsersTable from "@/app/ui/users/table";
+import { CreateUser } from "@/app/ui/users/buttons";
 import Search from "@/app/ui/search";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
@@ -20,15 +20,15 @@ async function Page({
     return (
         <main>
             <h1 className="mb-4 text-xl md:text-2xl">
-                Posts Page
+                Users Page
             </h1>
             <div className="w-full">
                 <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-                    <Search placeholder="Search posts..." />
-                    <CreatePost />
+                    <Search placeholder="Search users..." />
+                    <CreateUser />
                 </div>
                 <Suspense key={query + currPage} fallback={<InvoicesTableSkeleton />}>
-                    <PostsTable query={query} currentPage={currPage} currentLimit={currLimit} />
+                    <UsersTable query={query} currentPage={currPage} currentLimit={currLimit} />
                 </Suspense>
                 <div className="mt-5 flex w-full justify-center">
                     {/* <Pagination totalPages={totalPages} /> */}
