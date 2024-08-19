@@ -71,7 +71,7 @@ const UsersTable = ({
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateUser id={user.id} />
-                    <DeleteUser id={user.id} />
+                    <DeleteUser id={user.id} onDelete={triggerRefetch} />
                   </div>
                 </div>
               </div>

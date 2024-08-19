@@ -11,7 +11,6 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 To Do:
 - Connect Users:
     - Edit Form
-    - Delete
 - Connect Posts:
     - Create Form
     - Edit Form
