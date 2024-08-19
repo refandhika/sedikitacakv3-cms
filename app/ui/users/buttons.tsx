@@ -1,5 +1,7 @@
+import { deleteUser } from '@/app/lib/fetch';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { FormEvent } from 'react';
 
 export function CreateUser() {
   return (
@@ -24,10 +26,24 @@ export function UpdateUser({ id }: { id: string }) {
   );
 }
 
-export function DeleteUser({ id }: { id: string }) {
+export function DeleteUser({ id, onDelete }: { id: string, onDelete: () => void }) {
+  const handleDelete = async (e: FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const deleteResponse = await deleteUser(id);
+      alert(deleteResponse);
+      onDelete();
+    } catch (err) {
+      console.error('Failed to delete users:', err);
+    }
+  };
+
   return (
     <>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
+      <button
+        className="rounded-md border p-2 hover:bg-gray-100"
+        onClick={handleDelete}
+      >
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
       </button>

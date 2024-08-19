@@ -18,6 +18,7 @@ const UsersTable = ({
 }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +33,11 @@ const UsersTable = ({
     }
 
     fetchData();
-  }, [query, currentPage, currentLimit])
+  }, [query, currentPage, currentLimit, refresh])
+
+  const triggerRefetch = () => {
+    setRefresh(prev => !prev);
+  };
 
   if(loading){
     return <div>Loading...</div>;
@@ -115,7 +120,7 @@ const UsersTable = ({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateUser id={user.id} />
-                      <DeleteUser id={user.id} />
+                      <DeleteUser id={user.id} onDelete={triggerRefetch} />
                     </div>
                   </td>
                 </tr>

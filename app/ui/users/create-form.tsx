@@ -6,16 +6,66 @@ import {
   EnvelopeIcon,
   LockClosedIcon,
   CakeIcon,
-  SwatchIcon
+  SwatchIcon,
+  PhoneIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { useEffect, useState } from 'react';
-import { fetchRoles, fetchCurrentUser } from '@/app/lib/fetch';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { fetchRoles, fetchCurrentUser, saveUser } from '@/app/lib/fetch';
+// @ts-ignore
+import { useRouter } from 'next/navigation';
+
+interface FormDataUser {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  birth: string;
+  linkedin: string;
+  github: string;
+  role_id: number;
+}
 
 export default function CreateForm() {
+  const router = useRouter();
   const [roles, setRoles] = useState([]);
   const [user, setUser] = useState({});
+  const [formData, setFormData] = useState<FormDataUser>({
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    birth: '',
+    linkedin: '',
+    github: '',
+    role_id: 0
+  });
   const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    let intValue = 0;
+    if (name == "checkpass") return;
+    if (name == "role_id") intValue = parseInt(value);
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: intValue ? intValue : value,
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const sendResponse = await saveUser(formData);
+      console.log(sendResponse);
+      router.push("/dashboard/users");
+    } catch (err) {
+      console.error('Failed to submit users:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchRolesData = async () => {
@@ -48,7 +98,7 @@ export default function CreateForm() {
   }, []);
 
   return (
-    <form className="flex justify-between gap-4">
+    <form className="flex justify-between gap-4" onSubmit={handleSubmit}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6 w-full md:w-3/4">
 
         {/* User Name */}
@@ -64,6 +114,7 @@ export default function CreateForm() {
                 type="text"
                 placeholder="Enter user name"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
               />
               <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -83,6 +134,7 @@ export default function CreateForm() {
                 type="text"
                 placeholder="Enter user email"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
               />
               <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -102,6 +154,7 @@ export default function CreateForm() {
                 type="password"
                 placeholder="Enter user password"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
               />
               <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -121,6 +174,7 @@ export default function CreateForm() {
                 type="password"
                 placeholder="Enter user password again"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
               />
               <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -140,8 +194,29 @@ export default function CreateForm() {
                 type="text"
                 placeholder="Enter user birthdate"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
               />
               <CakeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+        
+        {/* User Phone */}
+        <div className="mb-4">
+          <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+            Phone
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                placeholder="Enter user phone number"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
+              />
+              <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
@@ -159,6 +234,7 @@ export default function CreateForm() {
                 type="text"
                 placeholder="Enter user linkedin"
                 className="peer block w-full rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -177,6 +253,7 @@ export default function CreateForm() {
                 type="text"
                 placeholder="Enter user github"
                 className="peer block w-full rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -190,8 +267,9 @@ export default function CreateForm() {
           <div className="relative">
             <select
               id="role"
-              name="roleId"
+              name="role_id"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              onChange={handleChange}
               defaultValue=""
             >
               {loading ? (
