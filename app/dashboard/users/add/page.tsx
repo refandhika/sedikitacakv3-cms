@@ -1,4 +1,4 @@
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import Breadcrumbs from '@/app/ui/users/breadcrumbs';
 import CreateForm from '@/app/ui/users/create-form';
  
 export default function Page() { 

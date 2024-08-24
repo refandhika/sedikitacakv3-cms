@@ -34,7 +34,30 @@ export async function fetchUsers(search: string = '', page: number = 1, limit: n
     }
 }
 
-export async function saveUser(formData: FormDataUser) {
+export async function fetchUserByID(id: string) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/user/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch user ${id} data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching user ${id} data from API:`, error);
+  }
+}
+
+export async function createUser(formData: FormDataUser) {
     const currToken = getCookie('cmsToken');
     
     try {
@@ -58,6 +81,32 @@ export async function saveUser(formData: FormDataUser) {
       alert(`Error saving users data from API: ${error}`);
       return;
     }
+}
+
+export async function updateUser(formData: FormDataUser, id: string) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/user/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save users data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving users data from API: ${error}`);
+    return;
+  }
 }
 
 export async function deleteUser(id: string) {

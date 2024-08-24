@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { fetchRoles, fetchCurrentUser, createUser } from '@/app/lib/fetch';
+import { fetchUserByID, fetchRoles, fetchCurrentUser, updateUser } from '@/app/lib/fetch';
 // @ts-ignore
 import { useRouter } from 'next/navigation';
 
@@ -26,8 +26,9 @@ interface FormDataUser {
   role_id: number;
 }
 
-export default function CreateForm() {
+export default function EditForm({ id }: { id: string }) {
   const router = useRouter();
+  const editId = id;
   const [roles, setRoles] = useState([]);
   const [user, setUser] = useState({});
   const [formData, setFormData] = useState<FormDataUser>({
@@ -40,12 +41,16 @@ export default function CreateForm() {
     github: '',
     role_id: 0
   });
+  const [passCheck, setPassCheck] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     let intValue = 0;
-    if (name == "checkpass") return;
+    if (name == "checkpass") {
+      setPassCheck(value);
+      return;
+    }
     if (name == "role_id") intValue = parseInt(value);
     setFormData((prevData) => ({
       ...prevData,
@@ -57,8 +62,10 @@ export default function CreateForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      const sendResponse = await createUser(formData);
-      router.push("/dashboard/users");
+      if(validateForm()){
+        const sendResponse = await updateUser(formData, id);
+        router.push("/dashboard/users");
+      }
     } catch (err) {
       console.error('Failed to submit users:', err);
     } finally {
@@ -66,7 +73,35 @@ export default function CreateForm() {
     }
   };
 
+  const validateForm = () : boolean => {
+    if(formData.password != passCheck) {
+      alert("Password mismatch!");
+      return false;
+    }
+    return true;
+  }
+
   useEffect(() => {
+    const fetchUserDataByID = async () => {
+      setLoading(true);
+      try {
+        const fetchedData = await fetchUserByID(editId);
+        setFormData({
+          name: fetchedData.name,
+          email: fetchedData.email,
+          password: '',
+          phone: fetchedData.phone,
+          birth: fetchedData.birth,
+          linkedin: fetchedData.linkedin,
+          github: fetchedData.github,
+          role_id: fetchedData.role_id
+        });
+      } catch (err) {
+        console.error(`Failed to fetch user ${id}:`, err);
+      } finally {
+        setLoading(false);
+      }
+    }
     const fetchRolesData = async () => {
       setLoading(true);
       try {
@@ -92,6 +127,7 @@ export default function CreateForm() {
 
     fetchRolesData();
     fetchCurrentUserData();
+    fetchUserDataByID();
   }, []);
 
   return (
@@ -112,6 +148,7 @@ export default function CreateForm() {
                 placeholder="Enter user name"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 onChange={handleChange}
+                value={formData.name}
               />
               <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -132,6 +169,7 @@ export default function CreateForm() {
                 placeholder="Enter user email"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 onChange={handleChange}
+                value={formData.email}
               />
               <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -152,6 +190,7 @@ export default function CreateForm() {
                 placeholder="Enter user password"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 onChange={handleChange}
+                value={formData.password}
               />
               <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -192,6 +231,7 @@ export default function CreateForm() {
                 placeholder="Enter user birthdate"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 onChange={handleChange}
+                value={formData.birth}
               />
               <CakeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -212,6 +252,7 @@ export default function CreateForm() {
                 placeholder="Enter user phone number"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 onChange={handleChange}
+                value={formData.phone}
               />
               <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -232,6 +273,7 @@ export default function CreateForm() {
                 placeholder="Enter user linkedin"
                 className="peer block w-full rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                 onChange={handleChange}
+                value={formData.linkedin}
               />
             </div>
           </div>
@@ -251,6 +293,7 @@ export default function CreateForm() {
                 placeholder="Enter user github"
                 className="peer block w-full rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
                 onChange={handleChange}
+                value={formData.github}
               />
             </div>
           </div>
@@ -267,7 +310,7 @@ export default function CreateForm() {
               name="role_id"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               onChange={handleChange}
-              defaultValue=""
+              defaultValue={formData.role_id ? formData.role_id : ''}
             >
               {loading ? (
                 <option value="" disabled>
