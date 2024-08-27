@@ -203,6 +203,29 @@ export async function fetchRoles() {
     }
 }
 
+export async function fetchAllRoles(search: string = '', page: number = 1, limit: number = 20) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/roles?page=${page}&limit=${limit}&search=${search}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch post categories data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching post categories data from API:', error);
+  }
+}
+
 export async function fetchCurrentUser() {
     const currToken = getCookie('cmsToken');
     const currUser = getCookie('currentId');
