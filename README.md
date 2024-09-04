@@ -9,10 +9,6 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 ---
 
 To Do:
-- Connect Roles:
-    - Create Form
-    - Edit Form
-    - Delete Form
 - Connect Categories:
     - Table
     - Create Form

@@ -31,7 +31,8 @@ export function DeleteUser({ id, onDelete }: { id: string, onDelete: () => void 
     e.preventDefault();
     try {
       const deleteResponse = await deleteUser(id);
-      alert(deleteResponse);
+      // alert(deleteResponse);
+      alert("Delete success!");
       onDelete();
     } catch (err) {
       console.error('Failed to delete users:', err);

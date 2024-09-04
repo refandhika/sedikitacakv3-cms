@@ -1,4 +1,4 @@
-import { deleteUser } from '@/app/lib/fetch';
+import { deleteRole } from '@/app/lib/fetch';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { FormEvent } from 'react';
@@ -30,8 +30,9 @@ export function DeleteRole({ id, onDelete }: { id: string, onDelete: () => void 
   const handleDelete = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const deleteResponse = await deleteUser(id);
-      alert(deleteResponse);
+      const deleteResponse = await deleteRole(id);
+      //alert(deleteResponse);
+      alert("Delete success!");
       onDelete();
     } catch (err) {
       console.error('Failed to delete roles:', err);

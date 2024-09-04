@@ -63,7 +63,7 @@ export default function EditForm({ id }: { id: string }) {
     setLoading(true);
     try {
       if(validateForm()){
-        const sendResponse = await updateUser(formData, id);
+        const sendResponse = await updateUser(formData, editId);
         router.push("/dashboard/users");
       }
     } catch (err) {
@@ -337,12 +337,12 @@ export default function EditForm({ id }: { id: string }) {
       <div className="rounded-md bg-gray-50 p-4 md:p-6 w-full md:w-1/4">
         <div className="flex gap-4">
           <Link
-            href="/dashboard/post"
+            href="/dashboard/users"
             className="flex h-10 items-center rounded-lg bg-white px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 w-fit"
           >
             Cancel
           </Link>
-          <Button type="submit">Create User</Button>
+          <Button type="submit">Update User</Button>
         </div>
       </div>
     </form>

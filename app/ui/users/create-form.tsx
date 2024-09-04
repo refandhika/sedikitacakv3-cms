@@ -294,7 +294,7 @@ export default function CreateForm() {
       <div className="rounded-md bg-gray-50 p-4 md:p-6 w-full md:w-1/4">
         <div className="flex gap-4">
           <Link
-            href="/dashboard/post"
+            href="/dashboard/users"
             className="flex h-10 items-center rounded-lg bg-white px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 w-fit"
           >
             Cancel

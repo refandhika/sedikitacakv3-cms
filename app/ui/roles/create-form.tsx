@@ -3,53 +3,41 @@
 import Link from 'next/link';
 import {
   UserIcon,
-  EnvelopeIcon,
-  LockClosedIcon,
-  CakeIcon,
   SwatchIcon,
-  PhoneIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { fetchRoles, fetchCurrentUser, createUser } from '@/app/lib/fetch';
+import { fetchCurrentUser, createRole } from '@/app/lib/fetch';
 // @ts-ignore
 import { useRouter } from 'next/navigation';
 
-interface FormDataUser {
+interface FormDataRole {
   name: string;
-  email: string;
-  password: string;
-  phone: string;
-  birth: string;
-  linkedin: string;
-  github: string;
-  role_id: number;
+  level: string;
+  can_modify_user: boolean;
+  can_edit: boolean;
+  can_view: boolean;
+  is_guest: boolean;
 }
 
 export default function CreateForm() {
   const router = useRouter();
-  const [roles, setRoles] = useState([]);
   const [user, setUser] = useState({});
-  const [formData, setFormData] = useState<FormDataUser>({
+  const [formData, setFormData] = useState<FormDataRole>({
     name: '',
-    email: '',
-    password: '',
-    phone: '',
-    birth: '',
-    linkedin: '',
-    github: '',
-    role_id: 0
+    level: 'guest',
+    can_modify_user: false,
+    can_edit: false,
+    can_view: false,
+    is_guest: true
   });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    let intValue = 0;
-    if (name == "checkpass") return;
-    if (name == "role_id") intValue = parseInt(value);
+    const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: intValue ? intValue : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -57,8 +45,8 @@ export default function CreateForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      const sendResponse = await createUser(formData);
-      router.push("/dashboard/users");
+      const sendResponse = await createRole(formData);
+      router.push("/dashboard/roles");
     } catch (err) {
       console.error('Failed to submit users:', err);
     } finally {
@@ -67,17 +55,6 @@ export default function CreateForm() {
   };
 
   useEffect(() => {
-    const fetchRolesData = async () => {
-      setLoading(true);
-      try {
-        const fetchedData = await fetchRoles();
-        setRoles(fetchedData);
-      } catch (err) {
-        console.error('Failed to fetch users:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
     const fetchCurrentUserData = async () => {
       setLoading(true);
       try {
@@ -90,7 +67,6 @@ export default function CreateForm() {
       }
     }
 
-    fetchRolesData();
     fetchCurrentUserData();
   }, []);
 
@@ -98,7 +74,7 @@ export default function CreateForm() {
     <form className="flex justify-between gap-4" onSubmit={handleSubmit}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6 w-full md:w-3/4">
 
-        {/* User Name */}
+        {/* Role Name */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
             Name
@@ -118,175 +94,101 @@ export default function CreateForm() {
           </div>
         </div>
 
-        {/* User Email */}
+        {/* Role Level */}
         <div className="mb-4">
-          <label htmlFor="email" className="mb-2 block text-sm font-medium">
-            Email
+          <label htmlFor="level" className="mb-2 block text-sm font-medium">
+            Choose level
           </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="email"
-                name="email"
-                type="text"
-                placeholder="Enter user email"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                onChange={handleChange}
-              />
-              <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
+          <div className="relative">
+            <select
+              id="level"
+              name="level"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              onChange={handleChange}
+              defaultValue="guest"
+            >
+              <option value="" disabled>Select a role</option>
+              <option key="administrator" value="administrator">Administrator</option>
+              <option key="editor" value="editor">Editor</option>
+              <option key="guest" value="guest">Guest</option>
+            </select>
+            <SwatchIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
         </div>
 
-        {/* User Password */}
-        <div className="mb-4">
-          <label htmlFor="password" className="mb-2 block text-sm font-medium">
-            Password
+        {/* Role Modify */}
+        <div className="mb-4 flex gap-4 align-center">
+          <label htmlFor="modify-user" className="block text-sm font-medium">
+            Can Modify User
           </label>
-          <div className="relative mt-2 rounded-md">
+          <div className="relative rounded-md">
             <div className="relative">
               <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter user password"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                id="modify-user"
+                name="can_modify_user"
+                type="checkbox"
+                className="peer block rounded-md border border-gray-200 outline-2"
                 onChange={handleChange}
+                checked={formData.can_modify_user}
               />
-              <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
-        {/* User Check Password */}
-        <div className="mb-4">
-          <label htmlFor="checkpass" className="mb-2 block text-sm font-medium">
-            Check Password
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="checkpass"
-                name="checkpass"
-                type="password"
-                placeholder="Enter user password again"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                onChange={handleChange}
-              />
-              <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
-        {/* User Birth */}
-        <div className="mb-4">
-          <label htmlFor="birth" className="mb-2 block text-sm font-medium">
-            Birth
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="birth"
-                name="birth"
-                type="text"
-                placeholder="Enter user birthdate"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                onChange={handleChange}
-              />
-              <CakeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
         
-        {/* User Phone */}
-        <div className="mb-4">
-          <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-            Phone
+        {/* Role Edit */}
+        <div className="mb-4 flex gap-4 align-center">
+          <label htmlFor="edit" className="block text-sm font-medium">
+            Can Edit
           </label>
-          <div className="relative mt-2 rounded-md">
+          <div className="relative rounded-md">
             <div className="relative">
               <input
-                id="phone"
-                name="phone"
-                type="text"
-                placeholder="Enter user phone number"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                id="edit"
+                name="can_edit"
+                type="checkbox"
+                className="peer block rounded-md border border-gray-200 outline-2"
                 onChange={handleChange}
-              />
-              <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
-        {/* User Linkedin */}
-        <div className="mb-4">
-          <label htmlFor="linkedin" className="mb-2 block text-sm font-medium">
-            Linkedin
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="linkedin"
-                name="linkedin"
-                type="text"
-                placeholder="Enter user linkedin"
-                className="peer block w-full rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-                onChange={handleChange}
+                checked={formData.can_edit}
               />
             </div>
           </div>
         </div>
-
-        {/* User Github */}
-        <div className="mb-4">
-          <label htmlFor="github" className="mb-2 block text-sm font-medium">
-            Github
+        
+        {/* Role View */}
+        <div className="mb-4 flex gap-4 align-center">
+          <label htmlFor="view" className="block text-sm font-medium">
+            Can View
           </label>
-          <div className="relative mt-2 rounded-md">
+          <div className="relative rounded-md">
             <div className="relative">
               <input
-                id="github"
-                name="github"
-                type="text"
-                placeholder="Enter user github"
-                className="peer block w-full rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+                id="view"
+                name="can_view"
+                type="checkbox"
+                className="peer block rounded-md border border-gray-200 outline-2"
                 onChange={handleChange}
+                checked={formData.can_view}
               />
             </div>
           </div>
         </div>
-
-        {/* User Role */}
-        <div className="mb-4">
-          <label htmlFor="role" className="mb-2 block text-sm font-medium">
-            Choose role
+        
+        {/* Role Guest */}
+        <div className="mb-4 flex gap-4 align-center">
+          <label htmlFor="guest" className="block text-sm font-medium">
+            Is Guest
           </label>
-          <div className="relative">
-            <select
-              id="role"
-              name="role_id"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              onChange={handleChange}
-              defaultValue=""
-            >
-              {loading ? (
-                <option value="" disabled>
-                  Loading data ...
-                </option>
-              ) : (
-                <>
-                <option value="" disabled>
-                  Select a role
-                </option>
-                {roles?.map((role: any) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
-                  </option>
-                ))}
-                </>
-              )}
-            </select>
-            <SwatchIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          <div className="relative rounded-md">
+            <div className="relative">
+              <input
+                id="guest"
+                name="is_guest"
+                type="checkbox"
+                className="peer block rounded-md border border-gray-200 outline-2"
+                onChange={handleChange}
+                checked={formData.is_guest}
+              />
+            </div>
           </div>
         </div>
 
@@ -294,12 +196,12 @@ export default function CreateForm() {
       <div className="rounded-md bg-gray-50 p-4 md:p-6 w-full md:w-1/4">
         <div className="flex gap-4">
           <Link
-            href="/dashboard/post"
+            href="/dashboard/roles"
             className="flex h-10 items-center rounded-lg bg-white px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 w-fit"
           >
             Cancel
           </Link>
-          <Button type="submit">Create User</Button>
+          <Button type="submit">Create Role</Button>
         </div>
       </div>
     </form>

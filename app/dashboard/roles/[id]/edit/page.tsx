@@ -2,7 +2,7 @@ import EditForm from '@/app/ui/roles/edit-form';
 import Breadcrumbs from '@/app/ui/roles/breadcrumbs';
  
 export default async function Page({ params }: { params: { uuid: string } }) {
-  const id = params.uuid;
+  const id = params.id;
 
   return (
     <main>
