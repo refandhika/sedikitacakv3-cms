@@ -40,8 +40,8 @@ const links = [
     icon: DocumentDuplicateIcon
   },
   {
-    name: 'Post Categories',
-    href: '/dashboard/post-categories',
+    name: 'Categories',
+    href: '/dashboard/categories',
     icon: BriefcaseIcon
   },
   {

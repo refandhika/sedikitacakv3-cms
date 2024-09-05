@@ -1,5 +1,5 @@
-import EditForm from '@/app/ui/roles/edit-form';
-import Breadcrumbs from '@/app/ui/roles/breadcrumbs';
+import EditForm from '@/app/ui/categories/edit-form';
+import Breadcrumbs from '@/app/ui/categories/breadcrumbs';
  
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -8,10 +8,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Roles', href: '/dashboard/roles' },
+          { label: 'Categories', href: '/dashboard/categories' },
           {
-            label: 'Edit Roles',
-            href: `/dashboard/roles/${id}/edit`,
+            label: 'Edit Category',
+            href: `/dashboard/categories/${id}/edit`,
             active: true,
           },
         ]}
