@@ -7,7 +7,7 @@ import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchAllCategories } from '@/app/lib/fetch';
 import { useEffect, useState } from 'react';
 
-const UsersTable = ({
+const CategoriesTable = ({
   query,
   currentPage,
   currentLimit
@@ -130,4 +130,4 @@ const UsersTable = ({
   );
 }
 
-export default UsersTable;
+export default CategoriesTable;

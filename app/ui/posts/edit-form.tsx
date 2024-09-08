@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { fetchActiveCategories, fetchCurrentUser, createPost } from '@/app/lib/fetch';
+import { fetchActiveCategories, fetchPostByID, fetchCurrentUser, updatePost } from '@/app/lib/fetch';
 // @ts-ignore
 import { useRouter } from 'next/navigation';
 
@@ -24,8 +24,9 @@ interface FormDataPost {
   published: boolean;
 }
 
-export default function CreateForm() {
+export default function EditForm({ id }: { id: string }) {
   const router = useRouter();
+  const editId = parseInt(id);
   const [categories, setCategories] = useState([]);
   const [user, setUser] = useState({});
   const [formData, setFormData] = useState<FormDataPost>({
@@ -64,10 +65,10 @@ export default function CreateForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      const sendResponse = await createPost(formData);
+      const sendResponse = await updatePost(formData, editId);
       router.push("/dashboard/posts");
     } catch (err) {
-      console.error('Failed to submit post:', err);
+      console.error('Failed to submit posts:', err);
     } finally {
       setLoading(false);
     }
@@ -85,17 +86,34 @@ export default function CreateForm() {
         setLoading(false);
       }
     }
+    const fetchPostDataByID = async () => {
+      setLoading(true);
+      try {
+        const fetchedData = await fetchPostByID(editId);
+        console.log(fetchedData);
+        setFormData({
+          title: fetchedData.title,
+          slug: fetchedData.slug,
+          subtitle: fetchedData.subtitle,
+          content: fetchedData.content,
+          category_id: fetchedData.category_id,
+          tags: fetchedData.tags,
+          author_id: fetchedData.author_id,
+          published: fetchedData.published
+        });
+      } catch (err) {
+        console.error(`Failed to fetch post ${id}:`, err);
+      } finally {
+        setLoading(false);
+      }
+    }
     const fetchCurrentUserData = async () => {
       setLoading(true);
       try {
         const fetchedData = await fetchCurrentUser();
         setUser(fetchedData);
-        setFormData((prevData) => ({
-          ...prevData,
-          ["author_id"]: fetchedData.id,
-        }));
       } catch (err) {
-        console.error('Failed to fetch current user:', err);
+        console.error('Failed to fetch users:', err);
       } finally {
         setLoading(false);
       }
@@ -103,6 +121,7 @@ export default function CreateForm() {
 
     fetchCategoryData();
     fetchCurrentUserData();
+    fetchPostDataByID();
   }, []);
 
   return (
@@ -202,7 +221,7 @@ export default function CreateForm() {
               name="category_id"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               onChange={handleChange}
-              defaultValue=""
+              defaultValue={formData.category_id}
             >
               {loading ? (
                 <option value="" disabled>
@@ -274,7 +293,7 @@ export default function CreateForm() {
           >
             Cancel
           </Link>
-          <Button type="submit">Create Post</Button>
+          <Button type="submit">Update Post</Button>
         </div>
       </div>
     </form>

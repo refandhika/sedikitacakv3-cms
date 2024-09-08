@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { UpdatePost, DeletePost } from '@/app/ui/posts/buttons';
 import PostStatus from '@/app/ui/posts/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchPosts } from '@/app/lib/fetch';
+import { fetchAllPosts } from '@/app/lib/fetch';
 import { useEffect, useState } from 'react';
 
-export default function PostsTable({
+const PostsTable = ({
   query,
   currentPage,
   currentLimit
@@ -15,14 +15,15 @@ export default function PostsTable({
   query: string;
   currentPage: number;
   currentLimit: number;
-}) {
+}) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedData = await fetchPosts(query, currentPage, currentLimit);
+        const fetchedData = await fetchAllPosts(query, currentPage, currentLimit);
         setPosts(fetchedData);
       } catch (err) {
         console.error('Failed to fetch posts:', err);
@@ -30,7 +31,13 @@ export default function PostsTable({
         setLoading(false);
       }
     }
-  }, [query, currentPage, currentLimit])
+
+    fetchData();
+  }, [query, currentPage, currentLimit, refresh])
+
+  const triggerRefetch = () => {
+    setRefresh(prev => !prev);
+  };
 
   if(loading){
     return <div>Loading...</div>;
@@ -49,29 +56,19 @@ export default function PostsTable({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <Image
-                        src={post.image_url}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${post.name}'s profile picture`}
-                      />
-                      <p>{post.name}</p>
+                      <p>{post.title}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{post.email}</p>
+                    <p className="text-sm text-gray-500">{post.user.name}</p>
                   </div>
-                  <PostStatus status={post.status} />
+                  <PostStatus status={post.published} />
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl font-medium">
-                      {formatCurrency(post.amount)}
-                    </p>
-                    <p>{formatDateToLocal(post.date)}</p>
+                    <p>{formatDateToLocal(post.created_at)}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdatePost id={post.id} />
-                    <DeletePost id={post.id} />
+                    <DeletePost id={post.id} onDelete={triggerRefetch} />
                   </div>
                 </div>
               </div>
@@ -81,22 +78,19 @@ export default function PostsTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  Title
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  Author
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  Active
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  Create Date
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
+                  <span className="sr-only">Action</span>
                 </th>
               </tr>
             </thead>
@@ -108,32 +102,22 @@ export default function PostsTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <Image
-                        src={post.image_url}
-                        className="rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${post.name}'s profile picture`}
-                      />
-                      <p>{post.name}</p>
+                      <p>{post.title}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {post.email}
+                    {post.user.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrency(post.amount)}
+                    {post.published ? "Published" : "Draft"}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(post.date)}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    <PostStatus status={post.status} />
+                    {formatDateToLocal(post.created_at)}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdatePost id={post.id} />
-                      <DeletePost id={post.id} />
+                      <DeletePost id={post.id} onDelete={triggerRefetch} />
                     </div>
                   </td>
                 </tr>
@@ -145,3 +129,5 @@ export default function PostsTable({
     </div>
   );
 }
+
+export default PostsTable;

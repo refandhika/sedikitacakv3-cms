@@ -176,35 +176,135 @@ export async function deleteUser(id: string) {
 }
 
 /* Posts */
-export async function fetchPosts(search: string = '', page: number = 1, limit: number = 20, cat: string = '') {
-    const currToken = getCookie('cmsToken');
-    
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/posts?page=${page}&limit=${limit}&cat=${cat}&search=${search}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currToken}`
-        },
-      });
+export async function fetchAllPosts(search: string = '', page: number = 1, limit: number = 20, cat: string = '') {
+  const currToken = getCookie('cmsToken');
   
-      if (!response.ok) {
-        throw new Error(`Failed to fetch posts data: ${response.statusText}`);
-      }
-  
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching posts data from API:', error);
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/posts?page=${page}&limit=${limit}&cat=${cat}&search=${search}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch posts data: ${response.statusText}`);
     }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching posts data from API:', error);
   }
+}
+
+export async function fetchPostByID(id: number) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch category ${id} data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching category '+ id +' data from API:', error);
+  }
+}
+
+export async function createPost(formData: FormDataUser) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save posts data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving posts data from API: ${error}`);
+    return;
+  }
+}
+
+export async function updatePost(formData: FormDataUser, id: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save posts data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving posts data from API: ${error}`);
+    return;
+  }
+}
+
+export async function deletePost(id: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      alert(`Failed to delete posts data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error deleting posts data from API: ${error}`);
+    return;
+  }
+}
 
 /* Post Categories */
-export async function fetchPostCategories() {
+export async function fetchActiveCategories() {
     const currToken = getCookie('cmsToken');
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post-categories`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post-categories/active`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

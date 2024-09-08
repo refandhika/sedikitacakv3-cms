@@ -1,20 +1,22 @@
+import EditForm from '@/app/ui/posts/edit-form';
 import Breadcrumbs from '@/app/ui/posts/breadcrumbs';
-import CreateForm from '@/app/ui/posts/create-form';
  
-export default function Page() { 
+export default async function Page({ params }: { params: { id: string } }) {
+  const id = params.id;
+
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
           { label: 'Posts', href: '/dashboard/posts' },
           {
-            label: 'Add Post',
-            href: '/dashboard/posts/add',
+            label: 'Edit Post',
+            href: `/dashboard/posts/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <CreateForm />
+      <EditForm id={id} />
     </main>
   );
 }
