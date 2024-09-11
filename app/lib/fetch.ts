@@ -27,6 +27,40 @@ interface FormDataCategory {
   activated: boolean;
 }
 
+/* Images */
+export async function uploadImage(file:File|null) {
+  const currToken = getCookie('cmsToken');
+  const currUser = getCookie('currentId');
+
+  if (!file) {
+    console.error('Please select a file');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/image`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to upload image: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error uploading image from API:', error);
+  }
+}
+
+
 /* Users */
 export async function fetchCurrentUser() {
   const currToken = getCookie('cmsToken');

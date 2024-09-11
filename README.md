@@ -9,6 +9,9 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 ---
 
 To Do:
+- Connect Image Upload:
+    - Show All
+    - Delete
 - Connect Techs:
     - Table
     - Create Form
