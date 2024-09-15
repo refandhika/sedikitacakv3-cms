@@ -11,6 +11,17 @@ interface FormDataUser {
     role_id: number;
 }
 
+interface FormDataPost {
+  title: string;
+  slug: string;
+  subtitle: string;
+  content: string;
+  category_id: number;
+  tags: string;
+  author_id: string;
+  published: boolean;
+}
+
 interface FormDataRole {
   name: string;
   level: string;
@@ -30,6 +41,17 @@ interface FormDataCategory {
 interface FormDataTech {
   title: string;
   icon: string;
+}
+
+interface FormDataProject {
+  title: string;
+  content: string;
+  source: string | null;
+  url: string | null;
+  demo: string | null;
+  relevant: boolean;
+  published: boolean;
+  tech_ids: number[];
 }
 
 /* Images */
@@ -116,7 +138,6 @@ export async function deleteImage(id: string) {
     return;
   }
 }
-
 
 /* Users */
 export async function fetchCurrentUser() {
@@ -303,17 +324,17 @@ export async function fetchPostByID(id: number) {
     });
 
     if (!response.ok) {
-      console.error(`Failed to fetch category ${id} data: ${response.statusText}`);
+      console.error(`Failed to fetch post ${id} data: ${response.statusText}`);
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching category '+ id +' data from API:', error);
+    console.error('Error fetching post '+ id +' data from API:', error);
   }
 }
 
-export async function createPost(formData: FormDataUser) {
+export async function createPost(formData: FormDataPost) {
   const currToken = getCookie('cmsToken');
   
   try {
@@ -339,7 +360,7 @@ export async function createPost(formData: FormDataUser) {
   }
 }
 
-export async function updatePost(formData: FormDataUser, id: string) {
+export async function updatePost(formData: FormDataPost, id: string) {
   const currToken = getCookie('cmsToken');
 
   try {
@@ -807,6 +828,153 @@ export async function deleteTech(id: string) {
     return data;
   } catch (error) {
     alert(`Error deleting tech data from API: ${error}`);
+    return;
+  }
+}
+
+/* Project */
+export async function fetchProjectByID(id: number) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/project/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch project ${id} data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching project '+ id +' data from API:', error);
+  }
+}
+
+export async function fetchActiveProjects(search: string = '', page: number = 1, limit: number = 20, rlv: boolean = true) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/projects/active?page=${page}&limit=${limit}&rlv=${rlv}&search=${search}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch projects data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching projects data from API:', error);
+  }
+}
+
+export async function fetchAllProjects(search: string = '', page: number = 1, limit: number = 20) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/projects?page=${page}&limit=${limit}&search=${search}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch projects data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching projects data from API:', error);
+  }
+}
+
+export async function createProject(formData: FormDataProject) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/project`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save project data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving project data from API: ${error}`);
+    return;
+  }
+}
+
+export async function updateProject(formData: FormDataProject, id: number) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/project/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save project data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving project data from API: ${error}`);
+    return;
+  }
+}
+
+export async function deleteProject(id: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/project/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      alert(`Failed to delete project data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error deleting project data from API: ${error}`);
     return;
   }
 }

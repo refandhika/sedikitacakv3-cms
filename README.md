@@ -9,11 +9,6 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 ---
 
 To Do:
-- Connect Projects:
-    - Table
-    - Create Form
-    - Edit Form
-    - Delete
 - Connect Hobbies:
     - Table
     - Crete Form
