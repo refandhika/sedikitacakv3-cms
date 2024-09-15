@@ -60,6 +60,58 @@ export async function uploadImage(file:File|null) {
   }
 }
 
+export async function fetchAllImages(search: string = '', page: number = 1, limit: number = 20, cat: string = '') {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/images`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch posts data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching posts data from API:', error);
+  }
+}
+
+export async function deleteImage(id: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/image`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify({
+        "filename": id,
+        "fileloc": ""
+      })
+    });
+
+    if (!response.ok) {
+      alert(`Failed to delete users data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error deleting users data from API: ${error}`);
+    return;
+  }
+}
+
 
 /* Users */
 export async function fetchCurrentUser() {

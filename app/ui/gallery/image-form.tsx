@@ -36,8 +36,8 @@ const ImageUploadForm = () => {
             onSubmit={handleSubmit}
             className="w-full"
         >
-            <div className="flex flex-row w-full justify-between items-center bg-gray-200 rounded-lg p-4">   
-                <div className="flex flex-row gap-4 items-center">
+            <div className="flex flex-col md:flex-row w-full justify-between items-start md:items-center gap-4 md:gap-0 bg-gray-200 rounded-lg p-4">   
+                <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
                     <label htmlFor="file" className="font-bold">Upload Image</label>
                     <input
                         type="file"
