@@ -27,6 +27,11 @@ interface FormDataCategory {
   activated: boolean;
 }
 
+interface FormDataTech {
+  title: string;
+  icon: string;
+}
+
 /* Images */
 export async function uploadImage(file:File|null) {
   const currToken = getCookie('cmsToken');
@@ -458,7 +463,7 @@ export async function fetchCategoryByID(id: number) {
 
 export async function createCategory(formData: FormDataCategory) {
   const currToken = getCookie('cmsToken');
-  console.log(formData);
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post-category`, {
       method: 'POST',
@@ -670,14 +675,138 @@ export async function deleteRole(id: string) {
     });
 
     if (!response.ok) {
-      alert(`Failed to delete users data: ${response.statusText}`);
+      alert(`Failed to delete role data: ${response.statusText}`);
       return;
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    alert(`Error deleting users data from API: ${error}`);
+    alert(`Error deleting role data from API: ${error}`);
+    return;
+  }
+}
+
+/* Techs */
+export async function fetchTechByID(id: number) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/tech/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch tech ${id} data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching tech '+ id +' data from API:', error);
+  }
+}
+
+export async function fetchAllTechs(search: string = '', page: number = 1, limit: number = 20) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/techs?page=${page}&limit=${limit}&search=${search}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch techs data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching techs data from API:', error);
+  }
+}
+
+export async function createTech(formData: FormDataTech) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/tech`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save tech data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving tech data from API: ${error}`);
+    return;
+  }
+}
+
+export async function updateTech(formData: FormDataTech, id: number) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/tech/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save tech data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving tech data from API: ${error}`);
+    return;
+  }
+}
+
+export async function deleteTech(id: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/tech/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      alert(`Failed to delete tech data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error deleting tech data from API: ${error}`);
     return;
   }
 }

@@ -9,11 +9,6 @@ This project use starter template from the [Next.js Dashboard App Course](https:
 ---
 
 To Do:
-- Connect Techs:
-    - Table
-    - Create Form
-    - Edit form
-    - Delete
 - Connect Projects:
     - Table
     - Create Form

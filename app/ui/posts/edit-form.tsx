@@ -90,7 +90,7 @@ export default function EditForm({ id }: { id: string }) {
       setLoading(true);
       try {
         const fetchedData = await fetchPostByID(editId);
-        console.log(fetchedData);
+
         setFormData({
           title: fetchedData.title,
           slug: fetchedData.slug,

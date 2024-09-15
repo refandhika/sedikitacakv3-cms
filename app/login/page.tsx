@@ -10,8 +10,6 @@ export default function LoginPage() {
     const cms_token = getCookie('cmsToken');
     const current_id = getCookie('currentId');
 
-    console.log
-
     if(cms_token && current_id) {
         window.location.href = '/dashboard';
     }

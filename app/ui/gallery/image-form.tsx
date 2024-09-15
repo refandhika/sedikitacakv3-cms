@@ -28,6 +28,7 @@ const ImageUploadForm = () => {
         } finally {
             setLoading(false);
             alert("Upload image success!");
+            window.location.reload();
         }
     };
 
