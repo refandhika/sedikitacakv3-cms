@@ -20,7 +20,6 @@ interface FormDataCategory {
 
 export default function CreateForm() {
   const router = useRouter();
-  const [category, setCategories] = useState([]);
   const [user, setUser] = useState({});
   const [formData, setFormData] = useState<FormDataCategory>({
     name: '',
@@ -31,7 +30,7 @@ export default function CreateForm() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type } = e.target;
     if (name == "name") {
       setFormData((prevData) => ({
         ...prevData,
@@ -42,10 +41,18 @@ export default function CreateForm() {
           .replace(/-+/g, '-'),
       }));
     }
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    if (type === "checkbox") {
+      const { checked } = e.target as HTMLInputElement;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

@@ -32,7 +32,7 @@ export default function EditForm({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type } = e.target;
     if (name == "name") {
       setFormData((prevData) => ({
         ...prevData,
@@ -42,11 +42,18 @@ export default function EditForm({ id }: { id: string }) {
           .replace(/\s+/g, '-')
           .replace(/-+/g, '-'),
       }));
+    }if (type === "checkbox") {
+      const { checked } = e.target as HTMLInputElement;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

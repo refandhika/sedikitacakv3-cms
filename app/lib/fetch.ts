@@ -35,7 +35,7 @@ interface FormDataCategory {
   name: string;
   slug: string;
   description: string;
-  activated: boolean;
+  published: boolean;
 }
 
 interface FormDataTech {
@@ -376,7 +376,7 @@ export async function createPost(formData: FormDataPost) {
   }
 }
 
-export async function updatePost(formData: FormDataPost, id: string) {
+export async function updatePost(formData: FormDataPost, id: number) {
   const currToken = getCookie('cmsToken');
 
   try {

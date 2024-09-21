@@ -42,7 +42,7 @@ export default function EditForm({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLSelectElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type } = e.target;
     let parseValue: any = value;
     if (name == "title") {
       setFormData((prevData) => ({
@@ -55,10 +55,18 @@ export default function EditForm({ id }: { id: string }) {
       }));
     }
     if (name == "category_id") parseValue = parseInt(value);
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : parseValue,
-    }));
+    if (type === "checkbox") {
+      const { checked } = e.target as HTMLInputElement;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
