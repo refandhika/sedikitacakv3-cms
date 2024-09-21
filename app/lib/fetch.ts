@@ -64,6 +64,12 @@ interface FormDataHobby {
   item_order: number;
 }
 
+interface FormDataSetting {
+  param: string;
+  value: string;
+  note: string;
+}
+
 /* Images */
 export async function uploadImage(file:File|null) {
   const currToken = getCookie('cmsToken');
@@ -1110,6 +1116,131 @@ export async function deleteHobby(id: string) {
     return data;
   } catch (error) {
     alert(`Error deleting hobby data from API: ${error}`);
+    return;
+  }
+}
+
+/* Setting */
+export async function fetchSettingByParam(param: string) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pub/setting/${param}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch setting ${param} data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching setting '+ param +' data from API:', error);
+  }
+}
+
+export async function fetchAllSettings(search: string = '', page: number = 1, limit: number = 20, cat: string = '') {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/settings?page=${page}&limit=${limit}&search=${search}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch settings data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching settings data from API:', error);
+  }
+}
+
+export async function createSetting(formData: FormDataSetting) {
+  const currToken = getCookie('cmsToken');
+  console.log(formData);
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/setting`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save setting data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving setting data from API: ${error}`);
+    return;
+  }
+}
+
+export async function updateSetting(formData: FormDataSetting, param: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/setting/${param}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save setting data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving setting data from API: ${error}`);
+    return;
+  }
+}
+
+export async function deleteSetting(id: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/setting/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      alert(`Failed to delete setting data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error deleting setting data from API: ${error}`);
     return;
   }
 }
