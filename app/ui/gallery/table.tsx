@@ -48,8 +48,8 @@ const ImageGrid = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {images?.map((image: any, index: number) => (
               <div key={index} className="relative">
-                <img className="rounded-lg w-full h-auto object-cover" src={"https://api.sedikitacak.com" + image.fileloc + "/" + image.filename} alt="" />
-                <div className="absolute rounded-lg top-0 left-0 w-full h-full text-white opacity-0 hover:bg-black hover:opacity-30 flex flex-col justify-center items-center transition-all">{image.fileloc + "/" + image.filename}</div>
+                <img className="rounded-lg w-full h-full object-cover" src={"https://api.sedikitacak.com" + image.fileloc + "/" + image.filename} alt="" />
+                <div className="absolute rounded-lg top-0 left-0 w-full h-full text-white opacity-0 hover:bg-[rgba(0,0,0,0.3)] hover:opacity-100 flex flex-col justify-center items-center transition-all">{image.fileloc + "/" + image.filename}</div>
                 <div className="absolute bottom-2 right-2 z-20">
                   <DeleteImage id={image.filename} onDelete={triggerRefetch} />
                 </div>

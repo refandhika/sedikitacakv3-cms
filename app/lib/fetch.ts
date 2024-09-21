@@ -54,6 +54,16 @@ interface FormDataProject {
   tech_ids: number[];
 }
 
+interface FormDataHobby {
+  title: string;
+  content: string;
+  image: string;
+  order: number;
+  active: boolean;
+  published: boolean;
+  item_order: number;
+}
+
 /* Images */
 export async function uploadImage(file:File|null) {
   const currToken = getCookie('cmsToken');
@@ -975,6 +985,131 @@ export async function deleteProject(id: string) {
     return data;
   } catch (error) {
     alert(`Error deleting project data from API: ${error}`);
+    return;
+  }
+}
+
+/* Hobby */
+export async function fetchHobbyByID(id: number) {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/hobby/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch hobby ${id} data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching hobby '+ id +' data from API:', error);
+  }
+}
+
+export async function fetchAllHobbies(search: string = '', page: number = 1, limit: number = 20, cat: string = '') {
+  const currToken = getCookie('cmsToken');
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/hobbies?page=${page}&limit=${limit}&search=${search}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch hobbies data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching hobbies data from API:', error);
+  }
+}
+
+export async function createHobby(formData: FormDataHobby) {
+  const currToken = getCookie('cmsToken');
+  console.log(formData);
+  
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/hobby`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save project data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving project data from API: ${error}`);
+    return;
+  }
+}
+
+export async function updateHobby(formData: FormDataHobby, id: number) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/hobby/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      alert(`Failed to save hobby data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error saving hobby data from API: ${error}`);
+    return;
+  }
+}
+
+export async function deleteHobby(id: string) {
+  const currToken = getCookie('cmsToken');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/hobby/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currToken}`
+      },
+    });
+
+    if (!response.ok) {
+      alert(`Failed to delete hobby data: ${response.statusText}`);
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alert(`Error deleting hobby data from API: ${error}`);
     return;
   }
 }
