@@ -4,8 +4,6 @@ A Modern CMS made with Next.js using [SedikitAcakV3-API](https://github.com/refa
 
 This project use starter template from the [Next.js Dashboard App Course](https://nextjs.org/learn/dashboard-app/getting-started) as reference.
 
-**Project Still On Going!**
-
 ---
 
 To Do:
