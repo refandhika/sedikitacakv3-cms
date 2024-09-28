@@ -123,12 +123,10 @@ export default function CreateForm() {
     const parsedId = id ? parseInt(id) : 0;
     const name = target.innerText;
     
-    let techs: number[] = [];
-    techs.concat(formData.tech_ids);
-    if (parsedId) techs.push(parsedId);
+    let techs: number[] = [...formData.tech_ids];
+    if (parsedId && !techs.includes(parsedId)) techs.push(parsedId);
 
-    let techsText: TechSet[] = [];
-    techsText.concat(currTechs);
+    let techsText: TechSet[] = [...currTechs];
     if(parsedId) techsText.push({
       id: parsedId,
       name: name
