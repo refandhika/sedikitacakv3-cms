@@ -319,7 +319,7 @@ export default function CreateForm() {
               onClick={toggleTechChoice}
               readOnly={true}
             />
-            <div className="absolute top-2 left-12">
+            <div className="absolute top-2 left-12 flex gap-2 overflow-x-auto no-scrollbar">
               {currTechs?.map((currTech: any) => (
                 <div 
                   className="px-2 py-1 text-xs bg-gray-100 flex justify-between items-center rounded-xl hover:bg-gray-200 transition-all"

@@ -100,6 +100,7 @@ export default function EditForm({ id }: { id: string }) {
         const fetchedData = await fetchProjectByID(editId);
         let fetchTech = fetchedData.techs;
         let techList: number[] = [];
+        console.log(fetchTech);
         for (const tech of fetchTech){
           techList.push(tech.id);
         }
@@ -169,12 +170,10 @@ export default function EditForm({ id }: { id: string }) {
     const parsedId = id ? parseInt(id) : 0;
     const name = target.innerText;
     
-    let techs: number[] = [];
-    techs.concat(formData.tech_ids);
-    if (parsedId) techs.push(parsedId);
+    let techs: number[] = [...formData.tech_ids];
+    if (parsedId && !techs.includes(parsedId)) techs.push(parsedId);
 
-    let techsText: TechSet[] = [];
-    techsText.concat(currTechs);
+    let techsText: TechSet[] = [...currTechs];
     if(parsedId) techsText.push({
       id: parsedId,
       name: name
@@ -195,7 +194,7 @@ export default function EditForm({ id }: { id: string }) {
     const name = target.innerText;
     
     let techs: number[] = (formData.tech_ids).filter((item) => item !== parsedId);
-    let techsText: TechSet[] = currTechs.filter((item) => item.id !== parsedId) ;
+    let techsText: TechSet[] = currTechs.filter((item) => item.id !== parsedId);
 
     setFormData((prevData) => ({
       ...prevData,
@@ -365,7 +364,7 @@ export default function EditForm({ id }: { id: string }) {
               onClick={toggleTechChoice}
               readOnly={true}
             />
-            <div className="absolute top-2 left-12">
+            <div className="absolute top-2 left-12 flex gap-2 overflow-x-auto no-scrollbar">
               {currTechs?.map((currTech: any) => (
                 <div 
                   className="px-2 py-1 text-xs bg-gray-100 flex justify-between items-center rounded-xl hover:bg-gray-200 transition-all"
