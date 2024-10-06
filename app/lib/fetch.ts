@@ -116,13 +116,13 @@ export async function fetchAllImages(search: string = '', page: number = 1, limi
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch posts data: ${response.statusText}`);
+      throw new Error(`Failed to fetch images data: ${response.statusText}`);
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching posts data from API:', error);
+    console.error('Error fetching images data from API:', error);
   }
 }
 
@@ -352,6 +352,12 @@ export async function fetchPostByID(id: number) {
 
 export async function createPost(formData: FormDataPost) {
   const currToken = getCookie('cmsToken');
+
+  const processedFormData = {
+    ...formData,
+    category_id: Number(formData.category_id),
+    published: Boolean(formData.published)
+  };
   
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post`, {
@@ -360,7 +366,7 @@ export async function createPost(formData: FormDataPost) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${currToken}`
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(processedFormData),
     });
 
     if (!response.ok) {
@@ -379,6 +385,12 @@ export async function createPost(formData: FormDataPost) {
 export async function updatePost(formData: FormDataPost, id: number) {
   const currToken = getCookie('cmsToken');
 
+  const processedFormData = {
+    ...formData,
+    category_id: Number(formData.category_id),
+    published: Boolean(formData.published)
+  };
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/post/${id}`, {
       method: 'POST',
@@ -386,7 +398,7 @@ export async function updatePost(formData: FormDataPost, id: number) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${currToken}`
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(processedFormData),
     });
 
     if (!response.ok) {
@@ -538,14 +550,14 @@ export async function updateCategory(formData: FormDataCategory, id: number) {
     });
 
     if (!response.ok) {
-      alert(`Failed to save role data: ${response.statusText}`);
+      alert(`Failed to save post category data: ${response.statusText}`);
       return;
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    alert(`Error saving role data from API: ${error}`);
+    alert(`Error saving post category data from API: ${error}`);
     return;
   }
 }
