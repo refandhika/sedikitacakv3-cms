@@ -1058,6 +1058,14 @@ export async function createHobby(formData: FormDataHobby) {
   const currToken = getCookie('cmsToken');
   console.log(formData);
   
+  const processedFormData = {
+    ...formData,
+    order: Number(formData.order),
+    item_order: Number(formData.item_order),
+    active: Boolean(formData.active),
+    published: Boolean(formData.published)
+  };
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/hobby`, {
       method: 'POST',
@@ -1065,7 +1073,7 @@ export async function createHobby(formData: FormDataHobby) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${currToken}`
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(processedFormData),
     });
 
     if (!response.ok) {
@@ -1084,6 +1092,14 @@ export async function createHobby(formData: FormDataHobby) {
 export async function updateHobby(formData: FormDataHobby, id: number) {
   const currToken = getCookie('cmsToken');
 
+  const processedFormData = {
+    ...formData,
+    order: Number(formData.order),
+    item_order: Number(formData.item_order),
+    active: Boolean(formData.active),
+    published: Boolean(formData.published)
+  };
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pro/hobby/${id}`, {
       method: 'POST',
@@ -1091,7 +1107,7 @@ export async function updateHobby(formData: FormDataHobby, id: number) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${currToken}`
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(processedFormData),
     });
 
     if (!response.ok) {
